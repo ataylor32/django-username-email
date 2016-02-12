@@ -1,35 +1,44 @@
-import os
-from setuptools import setup
+from os import path
+from setuptools import setup, find_packages
 
-with open(os.path.join(os.path.dirname(__file__), 'README.md')) as readme:
-    README = readme.read()
+here = path.abspath(path.dirname(__file__))
 
-# allow setup.py to be run from any path
-os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
+with open(path.join(here, 'README.md'), encoding='utf-8') as f:
+    long_description = f.read()
 
 setup(
-    name='django-email-username',
-    version='0.1',
-    packages=['cuser'],
-    include_package_data=True,
-    license='BSD License',  # license
-    description='A custom Django User model that makes email the USERNAME_FIELD.',
-    long_description=README,
-    url='https://github.com/thomasmeagher/django-email-username/',
+    name='django-username-email',
+
+    version='1.0.1a1',
+
+    description='Custom Django User model that makes email the USERNAME_FIELD.',
+    long_description=long_description,
+
+    url='https://github.com/thomasmeagher/django-username-email/',
+
     author='Tom Meagher',
     author_email='tom@meagher.co',
+
+    license='MIT',
+
     classifiers=[
+        'Development Status :: 3 - Alpha',
+
+        'Intended Audience :: Developers',
+        'Topic :: Internet :: WWW/HTTP',
+        'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
+
+        'License :: OSI Approved :: MIT License',
+
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 3.4',
+
         'Environment :: Web Environment',
         'Framework :: Django',
         'Framework :: Django :: 1.9',
-        'Intended Audience :: Developers',
-        'License :: MIT License',
         'Operating System :: OS Independent',
-        'Programming Language :: Python',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
-        'Topic :: Internet :: WWW/HTTP',
-        'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
     ],
+    keywords='user email username',
+
+    packages=find_packages(),
 )
