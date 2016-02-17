@@ -14,7 +14,7 @@ Because you still want everything in `django.contrib.auth`, but you also want us
 
 0. If you previously used Django's default User model, `django.contrib.auth.User`, jump to **Notes** first (then come back). Otherwise, continue onward!
 
-1. Install with `pip django-username-email`
+1. Install with `pip install django-username-email`
 
 2. Add "cuser" to your INSTALLED_APPS setting like this
     
@@ -23,7 +23,7 @@ Because you still want everything in `django.contrib.auth`, but you also want us
             'cuser',
         ]
 
-3. Specify the custom model as the default user model for your project using the AUTH_USER_MODEL setting in your settings.py:
+3. Specify the custom model as the default user model for your project using the `AUTH_USER_MODEL` setting in your settings.py:
    
         AUTH_USER_MODEL = 'cuser.CUser'
 
