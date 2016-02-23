@@ -16,7 +16,7 @@ Because you still want everything in `django.contrib.auth`, but you also want us
 
 1. Install with `pip install django-username-email`
 
-2. Add "cuser" to your INSTALLED_APPS setting like this
+2. Add "cuser" to your `INSTALLED_APPS` setting like this
     
         INSTALLED_APPS = [
             ...
@@ -50,6 +50,6 @@ For example:
 
 ##Questions, comments, or anything else?
 
-* [Submit an issue](https://github.com/thomasmeagher/django-username-email/issues/new "Submit and issue")
+* [Open an issue](https://github.com/thomasmeagher/django-username-email/issues/new "Open an issue")
 * [Twitter](https://twitter.com/thomasmeagher "@thomasmeagher")
 * tom@meagher.co
