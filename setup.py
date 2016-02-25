@@ -3,13 +3,13 @@ from setuptools import setup, find_packages
 
 here = path.abspath(path.dirname(__file__))
 
-with open(path.join(here, 'README.md'), encoding='utf-8') as f:
+with open(path.join(here, 'README.rst')) as f:
     long_description = f.read()
 
 setup(
     name='django-username-email',
 
-    version='1.0.2a1',
+    version='1.0.3a1',
 
     description='Custom Django User model that makes email the USERNAME_FIELD.',
     long_description=long_description,
