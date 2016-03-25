@@ -15,7 +15,7 @@ Why use CUser?
 
 Because you still want everything in ``django.contrib.auth``, but you
 also want users to **log in with email addresses**. And you don't want
-to manage your own custom User model or authentication backend.
+to create your own custom User model or authentication backend.
 
 Install & Set up
 ----------------
@@ -26,7 +26,7 @@ Install & Set up
 
 1. Install with ``pip install django-username-email``
 
-2. Add "cuser" to your ``INSTALLED_APPS`` setting like this
+2. Add ``cuser`` to your ``INSTALLED_APPS`` setting:
 
    ::
 
@@ -42,10 +42,17 @@ Install & Set up
 
        AUTH_USER_MODEL = 'cuser.CUser'
 
-4. Run ``python manage.py migrate`` to create CUser's models.
-
-5. Instead of referring to User directly, you should reference the user
+4. Instead of referring to User directly, you should reference the user
    model using ``django.contrib.auth.get_user_model()``
+
+5. Make migrations and migrate them to create CUser's models.
+
+   ::
+
+       python manage.py makemigrations cuser
+       python manage.py migrate
+
+
 
 Notes
 -----
