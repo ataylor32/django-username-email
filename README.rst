@@ -4,7 +4,7 @@ CUser, make email the USERNAME\_FIELD
 CUser makes it easy to use email address as your identification token
 instead of a username.
 
-CUser is a custom Django User model (extends AbstractBaseUser) so it
+CUser is a custom Django User model (extends ``AbstractBaseUser``) so it
 takes a tiny amount of effort to use.
 
 The only difference between CUser and the vanilla Django User is email
@@ -28,7 +28,7 @@ Install & Set up
 
 2. Add ``cuser`` to your ``INSTALLED_APPS`` setting:
 
-   ::
+   .. code-block:: python
 
        INSTALLED_APPS = [
            ...
@@ -38,7 +38,7 @@ Install & Set up
 3. Specify the custom model as the default user model for your project
    using the ``AUTH_USER_MODEL`` setting in your settings.py:
 
-   ::
+   .. code-block:: python
 
        AUTH_USER_MODEL = 'cuser.CUser'
 
@@ -47,7 +47,7 @@ Install & Set up
 
 5. Make migrations and migrate them to create CUser's models.
 
-   ::
+   .. code-block:: shell
 
        python manage.py makemigrations cuser
        python manage.py migrate
@@ -67,7 +67,7 @@ setting.
 
 For example:
 
-::
+.. code-block:: python
 
     from django.conf import settings
     from django.db import models
@@ -78,10 +78,14 @@ For example:
             on_delete=models.CASCADE,
     )
 
+License
+-------
+
+Released under the MIT license. See LICENSE for details.
+
 Questions, comments, or anything else?
 --------------------------------------
 
--  `Open an
-   issue <https://github.com/thomasmeagher/django-username-email/issues/new>`__
--  `Twitter <https://twitter.com/thomasmeagher>`__
+-  Open an issue
+-  `Twitter <https://twitter.com/tomfme>`__
 -  tom@meagher.co
