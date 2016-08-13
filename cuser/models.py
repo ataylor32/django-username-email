@@ -12,7 +12,7 @@ class CUserManager(BaseUserManager):
 
     def _create_user(self, email, password, **extra_fields):
         """
-        Creates and saves a User with the given username, email and password.
+        Creates and saves a User with the given email and password.
         """
         if not email:
             raise ValueError('The given email must be set')
@@ -81,6 +81,9 @@ class AbstractCUser(AbstractBaseUser, PermissionsMixin):
         verbose_name_plural = 'users'
         abstract = True
 
+    def __str__(self):
+        return self.email
+
     def get_full_name(self):
         """
         Returns the first_name plus the last_name, with a space in between.
@@ -103,7 +106,7 @@ class CUser(AbstractCUser):
     """
     Users within the Django authentication system are represented by this
     model.
-    Username, password and email are required. Other fields are optional.
+    Password and email are required. Other fields are optional.
     """
     # class Meta(AbstractCUser.Meta):
     #     swappable = 'AUTH_USER_MODEL'

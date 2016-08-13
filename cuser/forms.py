@@ -5,19 +5,49 @@ from django.contrib.auth import password_validation
 from cuser.models import CUser
 
 
+class UserAuthenticationForm(AuthenticationForm):
+
+    error_messages = {
+        'invalid_login': "Invalid credentials."
+    }
+
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault('label_suffix', '')
+        super(UserAuthenticationForm, self).__init__(*args, **kwargs)
+        self.fields['username'].widget = forms.TextInput(attrs={
+            'placeholder': 'email',
+            'spellcheck': 'false',
+            'autofocus': ''
+        })
+        self.fields['password'].widget = forms.PasswordInput(attrs={
+            'placeholder': 'password',
+        })
+
 class UserCreationForm(forms.ModelForm):
     """
-    A form that creates a user, with no privileges, from the given username and
+    A form that creates a user, with no privileges, from the given email and
     password.
     """
     error_messages = {
         'password_mismatch': "The two password fields didn't match.",
     }
+    email = forms.EmailField(
+        max_length=255,
+        widget=forms.EmailInput(attrs={
+            'placeholder': 'email',
+            'required': 'required',
+            'autofocus': 'autofocus'})
+        )
     password1 = forms.CharField(label="Password",
-        widget=forms.PasswordInput)
+        widget=forms.PasswordInput(attrs={
+            'placeholder': 'password',
+            'required': 'required'})
+        )
     password2 = forms.CharField(label="Confirm Password",
-        widget=forms.PasswordInput,
-        help_text="You know the drill.")
+        widget=forms.PasswordInput(attrs={
+            'placeholder': 'confirm password',
+            'required': 'required'})
+        )
 
     class Meta:
         model = CUser
@@ -50,8 +80,8 @@ class UserCreationForm(forms.ModelForm):
 class UserChangeForm(forms.ModelForm):
     password = ReadOnlyPasswordHashField(label="Password",
         help_text="Raw passwords are not stored, so there is no way to see "
-                    "this user's password, but you can change the password "
-                    "using <a href=\"../password/\">this form</a>.")
+            "this user's password, but you can change the password "
+            "using <a href=\"../password/\">this form</a>.")
 
     class Meta:
         model = CUser
