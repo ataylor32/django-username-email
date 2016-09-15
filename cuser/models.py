@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import (
     BaseUserManager, PermissionsMixin, AbstractBaseUser
 )
-from django.core import validators
 from django.core.mail import send_mail
 from django.utils import timezone
 
@@ -47,12 +46,7 @@ class AbstractCUser(AbstractBaseUser, PermissionsMixin):
     """
     email = models.EmailField(
         'email',
-        max_length=255,
         unique=True,
-        help_text='Required. 255 characters or fewer. Letters, digits, and @/./+/-/_ only.',
-        validators=[
-            validators.EmailValidator(),
-        ],
         error_messages={
             'unique': "A user with that email address already exists.",
         },
