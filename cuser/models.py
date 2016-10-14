@@ -74,15 +74,11 @@ class AbstractCUser(AbstractBaseUser, PermissionsMixin):
     objects = CUserManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
 
     class Meta:
         verbose_name = _('user')
         verbose_name_plural = _('users')
         abstract = True
-
-    def __str__(self):
-        return self.email
 
     def get_full_name(self):
         """
