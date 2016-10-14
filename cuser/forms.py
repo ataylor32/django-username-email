@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import ReadOnlyPasswordHashField
+from django.contrib.auth.forms import AuthenticationForm, ReadOnlyPasswordHashField
 from django.contrib.auth import password_validation
 
 from cuser.models import CUser
@@ -7,21 +7,13 @@ from cuser.models import CUser
 
 class UserAuthenticationForm(AuthenticationForm):
 
-    error_messages = {
-        'invalid_login': "Invalid credentials."
-    }
-
     def __init__(self, *args, **kwargs):
-        kwargs.setdefault('label_suffix', '')
         super(UserAuthenticationForm, self).__init__(*args, **kwargs)
-        self.fields['username'].widget = forms.TextInput(attrs={
-            'placeholder': 'email',
-            'spellcheck': 'false',
-            'autofocus': ''
+        self.fields['username'].widget = forms.EmailInput(attrs={
+            'autofocus': '',
+            'maxlength': self.fields['username'].max_length,
         })
-        self.fields['password'].widget = forms.PasswordInput(attrs={
-            'placeholder': 'password',
-        })
+
 
 class UserCreationForm(forms.ModelForm):
     """
