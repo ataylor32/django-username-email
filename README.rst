@@ -10,6 +10,8 @@ takes a tiny amount of effort to use.
 The only difference between CUser and the vanilla Django User is email
 address is the ``USERNAME_FIELD`` (and username does not exist).
 
+CUser supports Django 1.8+
+
 Why use CUser?
 --------------
 

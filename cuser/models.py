@@ -43,6 +43,7 @@ class AbstractCUser(AbstractBaseUser, PermissionsMixin):
     """
     An abstract base class implementing a fully featured User model with
     admin-compliant permissions.
+
     Email and password are required. Other fields are optional.
     """
     email = models.EmailField(
