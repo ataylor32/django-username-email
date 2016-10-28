@@ -1,9 +1,12 @@
 from django.contrib import admin
+from django.contrib.auth.admin import GroupAdmin as BaseGroupAdmin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib.auth.models import Group as StockGroup
 from django.utils.translation import ugettext_lazy as _
 
 from cuser.forms import UserChangeForm, UserCreationForm
-from cuser.models import CUser
+from cuser.models import CUser, Group
+from cuser.settings import CUSER_SETTINGS
 
 
 @admin.register(CUser)
@@ -27,3 +30,10 @@ class UserAdmin(BaseUserAdmin):
     list_display = ('email', 'first_name', 'last_name', 'is_staff')
     search_fields = ('email', 'first_name', 'last_name')
     ordering = ('email',)
+
+if CUSER_SETTINGS['register_proxy_auth_group_model']:
+    admin.site.unregister(StockGroup)
+
+    @admin.register(Group)
+    class GroupAdmin(BaseGroupAdmin):
+        pass

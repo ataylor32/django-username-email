@@ -75,7 +75,35 @@ Install & Set up
        python manage.py makemigrations cuser
        python manage.py migrate
 
+Configuration
+-------------
 
+To override any of the default settings, create a dictionary named ``CUSER`` in
+your settings.py with each setting you want to override. For example:
+
+.. code-block:: python
+
+    CUSER = {
+        'app_verbose_name': 'Authentication and Authorization',
+        'register_proxy_auth_group_model': True,
+    }
+
+These are the settings:
+
+``app_verbose_name`` (default: ``_("Custom User")``)
+****************************************************
+
+This controls the value that CUser will use for its ``AppConfig`` class'
+``verbose_name``.
+
+``register_proxy_auth_group_model`` (default: ``False``)
+********************************************************
+
+When set to ``True``, CUser's admin.py will unregister Django's default
+``Group`` model and register its own proxy model of Django's default ``Group``
+model (also named ``Group``). This is useful if you want Django's default
+``Group`` model to appear in the same part of the admin as CUser's ``CUser``
+model.
 
 Notes
 -----

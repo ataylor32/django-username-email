@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import (
     BaseUserManager, PermissionsMixin, AbstractBaseUser
 )
+from django.contrib.auth.models import Group as BaseGroup
 from django.core.mail import send_mail
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
@@ -107,3 +108,8 @@ class CUser(AbstractCUser):
     """
     # class Meta(AbstractCUser.Meta):
     #     swappable = 'AUTH_USER_MODEL'
+
+
+class Group(BaseGroup):
+    class Meta:
+        proxy = True
