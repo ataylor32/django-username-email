@@ -8,6 +8,7 @@ from cuser.models import CUser
 
 @admin.register(CUser)
 class UserAdmin(BaseUserAdmin):
+    add_form_template = 'admin/cuser/cuser/add_form.html'
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
         (_('Personal info'), {'fields': ('first_name', 'last_name')}),
