@@ -68,11 +68,10 @@ Install & Set up
            ...
        ]
 
-6. Make migrations and migrate them to create CUser's models.
+6. Run migrations.
 
    .. code-block:: shell
 
-       python manage.py makemigrations cuser
        python manage.py migrate
 
 Configuration
