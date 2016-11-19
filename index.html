@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html >
+<head>
+  <meta charset="UTF-8">
+  <title>Django Username Email, make email the USERNAME_FIELD</title>
+  <link href="https://fonts.googleapis.com/css?family=Muli:300,400|Roboto+Mono" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+  <link rel="stylesheet" href="style.css">  
+</head>
+
+<body>
+  <header>
+      <h1 class="title">Django Username Email</h1>
+      <span class="headline">Custom Django User model that makes email the <code>USERNAME_FIELD</code>.</span>
+  </header>
+
+  <section>
+      <div class="title-box">
+        <h2>Install & Set up</h2>
+        <a href="https://github.com/tmm/django-username-email">View on GitHub</a>
+    </div>
+    <ol>
+        <li>
+          <p>Install with pip</p>
+          <pre>$ pip install django-username-email</pre>
+      </li>
+      <li>
+          <p>Add cuser to your <code>INSTALLED_APPS</code> setting</p>
+
+          <pre>
+            INSTALLED_APPS = [
+            ...
+            'cuser',
+            ]</pre>
+        </li>
+        <li>
+          <p>Specify <code>cuser</code> as the default user model in your settings.py</p>
+          <pre>AUTH_USER_MODEL = 'cuser.CUser'</pre>
+      </li>
+      <li>
+          <p>Instead of referring to User directly, you should reference the user model using</p>
+          <pre>django.contrib.auth.get_user_model()</pre>
+      </li>
+  </ol>
+</section>
+
+<section>
+  <div class="title-box">
+    <h2>Why?</h2>
+    <a href="https://github.com/tmm/django-username-email/blob/master/LICENSE">Released under the MIT license.</a>
+</div>
+
+<p>Because you still want everything in <code>django.contrib.auth</code>, but you also want users to <strong>log in with email addresses</strong>. And you don't want to create your own custom User model or authentication backend.</p>
+</section>
+
+<footer>
+  <p>Made by <a href="http://meagher.co/">Tom</a>, <a href="https://github.com/ataylor32">Adam</a>, and you! (Pull requests, feedback, and other random acts of code welcome.)</p>
+</footer>
+
+</body>
+</html>
