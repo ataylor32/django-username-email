@@ -1,9 +1,0 @@
-.idea/
-build/
-dist/
-*.egg-info/
-*.egg
-*.py[cod]
-__pycache__/
-*.so
-*~
