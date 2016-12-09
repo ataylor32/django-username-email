@@ -104,10 +104,11 @@ class CUser(AbstractCUser):
     """
     Users within the Django authentication system are represented by this
     model.
+
     Password and email are required. Other fields are optional.
     """
-    # class Meta(AbstractCUser.Meta):
-    #     swappable = 'AUTH_USER_MODEL'
+    class Meta(AbstractCUser.Meta):
+        swappable = 'AUTH_USER_MODEL'
 
 
 class Group(BaseGroup):
