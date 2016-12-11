@@ -1,0 +1,9 @@
+deploy:
+  provider: pypi
+  user: meagher
+  password:
+    secure: C9+7tbTd8w15z/2j0gcbfTwsq0/qgbqJd9mQsGLLhXDG5qCc40CUC459N5NQo+VXkG9U/8EKjSb7nQzTZRKOabC2iXF1xy8i9bGbqt4ZWaxW77SW8mGHc8v5FVc6zo/esrQ+hMs9ArU6Q+sDpLIWL02xKbx10SIykK7tdzJTLTy1yDx4PJy/qeB5ZPZGtbqSfuLL8nvGa8OxwV9Q2SaDbbpaKjwQ31a2O5Zc/EJGXdgeW+bkwDIrTkuEtOVVjIFRkGueXtNRaN/nH37gSbGGSLVPiGH64EZYbydWdDFAKz/IP6aJ+U+ASk4ABnreSSaioQVntoP0Z4OAgPJAd829XgQqc3bU5n09PK7rrEviNvoCCBQ9oe0jM/Okrd9sp1SOW5n/UQsc1z0+LwYZyb36y8KR/5/RSkSC+WNiA3WVkhkx+x9oOpvWl0+/GMs6s/x9ly3OcmGpXKaru/aWvuOf6/Qse71JlIYOo/PX04vaxzX9JSW9fLFa2FrIyy8/3i5VeJF7Xcaq99PvKSXAWxKpjQpWnR6VGqb14YowxQddE5rgM5yy5y7F1TGMxmfoy5hLGJndhaP2u6s0H++MMw2eCGzXFI2UNbRM1UB30CRfPViv7O52XRUtO9svgWNPhmJJkrMwdy0IixvdRwqbeE4C0bWkenNSfTvRfgdJUcnYJpE=
+  on:
+    tags: true
+    distributions: sdist bdist_wheel
+    repo: tmm/django-username-email
