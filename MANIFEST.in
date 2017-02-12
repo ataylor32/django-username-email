@@ -1,2 +1,3 @@
+recursive-include cuser/templates *
 include LICENSE
 include README.rst
