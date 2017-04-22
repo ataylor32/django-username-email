@@ -8,7 +8,9 @@ from cuser.models import CUser
 
 email_input_attrs = {}
 
-if django.VERSION >= (1, 10):
+if django.VERSION >= (1, 11):
+    email_input_attrs['autofocus'] = True
+elif django.VERSION == (1, 10):
     email_input_attrs['autofocus'] = ''
 
 if django.VERSION >= (1, 9):
@@ -33,6 +35,12 @@ else:
     user_creation_form_password2_help_text = _(
         "Enter the same password as above, for verification."
     )
+
+password1_field_kwargs = password_field_kwargs.copy()
+
+if django.VERSION >= (1, 11):
+    password1_field_kwargs['help_text'] = \
+        password_validation.password_validators_help_text_html()
 
 
 class AuthenticationForm(forms.Form):
@@ -76,7 +84,10 @@ class AuthenticationForm(forms.Form):
         password = self.cleaned_data.get('password')
 
         if email and password:
-            self.user_cache = authenticate(email=email, password=password)
+            if django.VERSION >= (1, 11):
+                self.user_cache = authenticate(self.request, email=email, password=password)
+            else:
+                self.user_cache = authenticate(email=email, password=password)
             if self.user_cache is None:
                 raise forms.ValidationError(
                     self.error_messages['invalid_login'],
@@ -130,7 +141,7 @@ class UserCreationForm(forms.ModelForm):
     password1 = forms.CharField(
         label=_("Password"),
         widget=forms.PasswordInput,
-        **password_field_kwargs
+        **password1_field_kwargs
     )
     password2 = forms.CharField(
         label=_("Password confirmation"),
