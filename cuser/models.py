@@ -114,7 +114,9 @@ class CUser(AbstractCUser):
     """
     class Meta(AbstractCUser.Meta):
         swappable = 'AUTH_USER_MODEL'
-        db_table = settings.CUSER_SETTINGS['db_table']
+
+        if settings.CUSER.get('db_table') is not None:
+            db_table = settings.CUSER['db_table']
 
 
 class Group(BaseGroup):
