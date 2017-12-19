@@ -89,6 +89,12 @@ Install & Set up
 
        python manage.py migrate
 
+7. There is a good chance that you want foo@example.com and FOO@example.com to
+   be treated as the same email address. There is a variety of ways to go about
+   doing this. How you handle it will depend on the needs of your project and
+   personal preference, so CUser does not provide a solution for this out of
+   the box. You will need to address this yourself if this applies to you.
+
 Configuration
 -------------
 
