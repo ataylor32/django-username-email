@@ -1,46 +1,14 @@
-import django
+from __future__ import unicode_literals
+
 from django import forms
-from django.contrib.auth import authenticate, get_user_model
+from django.contrib.auth import (authenticate, get_user_model,
+                                 password_validation)
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.utils.translation import ugettext_lazy as _
 
 from cuser.models import CUser
 
-email_input_attrs = {}
-
-if django.VERSION >= (1, 11):
-    email_input_attrs['autofocus'] = True
-elif django.VERSION == (1, 10):
-    email_input_attrs['autofocus'] = ''
-
-if django.VERSION >= (1, 9):
-    from django.contrib.auth import password_validation
-    password_field_kwargs = {'strip': False}
-    user_change_form_password_help_text = _(
-        "Raw passwords are not stored, so there is no way to see this user's "
-        "password, but you can change the password using "
-        "<a href=\"../password/\">this form</a>."
-    )
-    user_creation_form_password2_help_text = _(
-        "Enter the same password as before, for verification."
-    )
-else:
-    password_validation = None
-    password_field_kwargs = {}
-    user_change_form_password_help_text = _(
-        "Raw passwords are not stored, so there is no way to see this user's "
-        "password, but you can change the password using "
-        "<a href=\"password/\">this form</a>."
-    )
-    user_creation_form_password2_help_text = _(
-        "Enter the same password as above, for verification."
-    )
-
-password1_field_kwargs = password_field_kwargs.copy()
-
-if django.VERSION >= (1, 11):
-    password1_field_kwargs['help_text'] = \
-        password_validation.password_validators_help_text_html()
+UserModel = get_user_model()
 
 
 class AuthenticationForm(forms.Form):
@@ -51,12 +19,12 @@ class AuthenticationForm(forms.Form):
     email = forms.EmailField(
         label=_("Email address"),
         max_length=254,
-        widget=forms.EmailInput(attrs=email_input_attrs),
+        widget=forms.EmailInput(attrs={'autofocus': True}),
     )
     password = forms.CharField(
         label=_("Password"),
+        strip=False,
         widget=forms.PasswordInput,
-        **password_field_kwargs
     )
 
     error_messages = {
@@ -76,7 +44,6 @@ class AuthenticationForm(forms.Form):
         self.user_cache = None
         super(AuthenticationForm, self).__init__(*args, **kwargs)
 
-        UserModel = get_user_model()
         self.username_field = UserModel._meta.get_field(UserModel.USERNAME_FIELD)
 
     def clean(self):
@@ -84,11 +51,17 @@ class AuthenticationForm(forms.Form):
         password = self.cleaned_data.get('password')
 
         if email and password:
-            if django.VERSION >= (1, 11):
-                self.user_cache = authenticate(self.request, email=email, password=password)
-            else:
-                self.user_cache = authenticate(email=email, password=password)
+            self.user_cache = authenticate(self.request, email=email, password=password)
             if self.user_cache is None:
+                # An authentication backend may reject inactive users. Check
+                # if the user exists and is inactive, and raise the 'inactive'
+                # error if so.
+                try:
+                    self.user_cache = UserModel._default_manager.get_by_natural_key(email)
+                except UserModel.DoesNotExist:
+                    pass
+                else:
+                    self.confirm_login_allowed(self.user_cache)
                 raise forms.ValidationError(
                     self.error_messages['invalid_login'],
                     code='invalid_login',
@@ -136,18 +109,19 @@ class UserCreationForm(forms.ModelForm):
     email = forms.EmailField(
         label=_("Email address"),
         max_length=254,
-        widget=forms.EmailInput(attrs=email_input_attrs),
+        widget=forms.EmailInput(attrs={'autofocus': True}),
     )
     password1 = forms.CharField(
         label=_("Password"),
+        strip=False,
         widget=forms.PasswordInput,
-        **password1_field_kwargs
+        help_text=password_validation.password_validators_help_text_html(),
     )
     password2 = forms.CharField(
         label=_("Password confirmation"),
         widget=forms.PasswordInput,
-        help_text=user_creation_form_password2_help_text,
-        **password_field_kwargs
+        strip=False,
+        help_text=_("Enter the same password as before, for verification."),
     )
 
     class Meta:
@@ -162,9 +136,8 @@ class UserCreationForm(forms.ModelForm):
                 self.error_messages['password_mismatch'],
                 code='password_mismatch',
             )
-        if password_validation:
-            self.instance.email = self.cleaned_data.get('email')
-            password_validation.validate_password(self.cleaned_data.get('password2'), self.instance)
+        self.instance.email = self.cleaned_data.get('email')
+        password_validation.validate_password(self.cleaned_data.get('password2'), self.instance)
         return password2
 
     def save(self, commit=True):
@@ -183,7 +156,11 @@ class UserChangeForm(forms.ModelForm):
     )
     password = ReadOnlyPasswordHashField(
         label=_("Password"),
-        help_text=user_change_form_password_help_text,
+        help_text=_(
+            "Raw passwords are not stored, so there is no way to see this "
+            "user's password, but you can change the password using "
+            "<a href=\"../password/\">this form</a>."
+        ),
     )
 
     class Meta:
