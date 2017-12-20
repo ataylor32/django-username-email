@@ -66,7 +66,7 @@ Install & Set up
    CUser. This will make the ``<input>`` have its ``type`` attribute set
    to ``email`` and browsers' autocomplete feature will suggest email
    addresses instead of usernames. For example, if your project is using
-   Django's default ``login`` view (or ``LoginView`` in Django 1.11), this is
+   Django's default ``login`` view (or ``LoginView`` in Django 1.11+), this is
    what you would put in your urls.py in order to make use of CUser's
    ``AuthenticationForm`` class:
 
@@ -82,7 +82,7 @@ Install & Set up
            ...
        ]
 
-   Or if you're using Django 1.11:
+   Or if you're using Django 1.11+:
 
    .. code-block:: python
 
