@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 from django.contrib.auth.models import (
     BaseUserManager, PermissionsMixin, AbstractBaseUser
 )
@@ -110,6 +111,9 @@ class CUser(AbstractCUser):
     """
     class Meta(AbstractCUser.Meta):
         swappable = 'AUTH_USER_MODEL'
+
+        if settings.CUSER.get('db_table') is not None:
+            db_table = settings.CUSER['db_table']
 
 
 class Group(BaseGroup):

@@ -138,6 +138,30 @@ model (also named ``Group``). This is useful if you want Django's default
 ``Group`` model to appear in the same part of the admin as CUser's ``CUser``
 model.
 
+Change default table name
+-------------------------
+
+By default Django gives the default table name in data base for each model.
+In our case it is equal to ``cuser_cuser``. If you want to change it you need
+to add ``db_table`` value to ``CUSER`` dictionary in your settings file.
+For instance, when you add:
+
+.. code-block:: python
+
+    CUSER = {
+        ...
+        'db_table': 'users',
+    }
+
+And run  the following after that:
+
+.. code-block:: shell
+
+       python manage.py makemigrations cuser
+       python manage.py migrate
+
+your table name for custom user model will be equal to ``users``
+
 Notes
 -----
 
