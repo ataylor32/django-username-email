@@ -43,6 +43,8 @@ class Migration(migrations.Migration):
             fields=[
             ],
             options={
+                'verbose_name': 'group',
+                'verbose_name_plural': 'groups',
                 'proxy': True,
             },
             bases=('auth.group',),
