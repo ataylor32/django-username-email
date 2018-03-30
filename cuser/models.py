@@ -114,4 +114,6 @@ class CUser(AbstractCUser):
 
 class Group(BaseGroup):
     class Meta:
+        verbose_name = _('group')
+        verbose_name_plural = _('groups')
         proxy = True
