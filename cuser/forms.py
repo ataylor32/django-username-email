@@ -1,3 +1,4 @@
+import django
 from django import forms
 from django.contrib.auth import (authenticate, get_user_model,
                                  password_validation)
@@ -51,11 +52,14 @@ class AuthenticationForm(forms.Form):
         if email and password:
             self.user_cache = authenticate(self.request, email=email, password=password)
             if self.user_cache is None:
-                raise forms.ValidationError(
-                    self.error_messages['invalid_login'],
-                    code='invalid_login',
-                    params={'username': self.username_field.verbose_name},
-                )
+                if django.VERSION < (2, 1):
+                    raise forms.ValidationError(
+                        self.error_messages['invalid_login'],
+                        code='invalid_login',
+                        params={'username': self.username_field.verbose_name},
+                    )
+
+                raise self.get_invalid_login_error()
             else:
                 self.confirm_login_allowed(self.user_cache)
 
@@ -78,13 +82,22 @@ class AuthenticationForm(forms.Form):
                 code='inactive',
             )
 
-    def get_user_id(self):
-        if self.user_cache:
-            return self.user_cache.id
-        return None
+    if django.VERSION < (2, 1):
+        def get_user_id(self):
+            if self.user_cache:
+                return self.user_cache.id
+            return None
 
     def get_user(self):
         return self.user_cache
+
+    if django.VERSION >= (2, 1):
+        def get_invalid_login_error(self):
+            return forms.ValidationError(
+                self.error_messages['invalid_login'],
+                code='invalid_login',
+                params={'username': self.username_field.verbose_name},
+            )
 
 
 class UserCreationForm(forms.ModelForm):
@@ -167,10 +180,19 @@ class UserChangeForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['password'].help_text = self.fields['password'].help_text.format('../password/')
-        f = self.fields.get('user_permissions')
-        if f is not None:
-            f.queryset = f.queryset.select_related('content_type')
+
+        if django.VERSION < (2, 1):
+            self.fields['password'].help_text = self.fields['password'].help_text.format('../password/')
+            f = self.fields.get('user_permissions')
+            if f is not None:
+                f.queryset = f.queryset.select_related('content_type')
+        else:
+            password = self.fields.get('password')
+            if password:
+                password.help_text = password.help_text.format('../password/')
+            user_permissions = self.fields.get('user_permissions')
+            if user_permissions:
+                user_permissions.queryset = user_permissions.queryset.select_related('content_type')
 
     def clean_password(self):
         # Regardless of what the user provides, return the initial value.
