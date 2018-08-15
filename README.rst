@@ -66,23 +66,9 @@ Install & Set up
    CUser. This will make the ``<input>`` have its ``type`` attribute set
    to ``email`` and browsers' autocomplete feature will suggest email
    addresses instead of usernames. For example, if your project is using
-   Django's default ``login`` view (or ``LoginView`` in Django 1.11+), this is
+   Django's default ``LoginView`` view (or ``login`` view in Django < 1.11), this is
    what you would put in your urls.py in order to make use of CUser's
    ``AuthenticationForm`` class:
-
-   .. code-block:: python
-
-       from cuser.forms import AuthenticationForm
-       from django.conf.urls import include, url
-       from django.contrib.auth.views import login
-
-       urlpatterns = [
-           url(r'^accounts/login/$', login, {'authentication_form': AuthenticationForm}, name='login'),
-           url(r'^accounts/', include('django.contrib.auth.urls')),
-           ...
-       ]
-
-   Or if you're using Django 1.11+:
 
    .. code-block:: python
 
@@ -92,6 +78,20 @@ Install & Set up
 
        urlpatterns = [
            url(r'^accounts/login/$', LoginView.as_view(authentication_form=AuthenticationForm), name='login'),
+           url(r'^accounts/', include('django.contrib.auth.urls')),
+           ...
+       ]
+
+   Or if you're using Django < 1.11:
+
+   .. code-block:: python
+
+       from cuser.forms import AuthenticationForm
+       from django.conf.urls import include, url
+       from django.contrib.auth.views import login
+
+       urlpatterns = [
+           url(r'^accounts/login/$', login, {'authentication_form': AuthenticationForm}, name='login'),
            url(r'^accounts/', include('django.contrib.auth.urls')),
            ...
        ]
