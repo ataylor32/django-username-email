@@ -25,6 +25,25 @@ backend.
 Install & Set up
 ----------------
 
+**Important:** To keep things simple, the steps below will guide you through
+the process of using CUser's ``CUser`` model for your Django project's user
+model. However, it is strongly recommended that you set up a custom user model
+that extends CUser's ``AbstractCUser`` class, even if CUser's ``CUser`` model
+is sufficient for you (this way, you can customize the user model if the need
+arises). If you would *not* like to follow this recommendation and just want to
+use CUser's ``CUser`` model, simply follow the steps below (you can skip the
+rest of this paragraph). If you *would* like to follow this recommendation, you
+should still follow the steps below, but with the following adjustments: After
+step 2, follow
+`these instructions <https://docs.djangoproject.com/en/1.11/topics/auth/customizing/#using-a-custom-user-model-when-starting-a-project>`_,
+but instead of using ``from django.contrib.auth.models import AbstractUser``
+use ``from cuser.models import AbstractCUser`` and instead of using
+``from django.contrib.auth.admin import UserAdmin`` use
+``from cuser.admin import UserAdmin``. Then for step 3 of the steps below, you
+should set ``AUTH_USER_MODEL`` to your custom user model instead of CUser's
+``CUser`` model. You should then run ``python manage.py makemigrations``. After
+that, you may follow the remaining steps below just the way they are.
+
 0. If your Django project previously used Django's default user model,
    ``django.contrib.auth.models.User``, or if you are unfamiliar with using
    custom user models, jump to **Notes** first (then come
