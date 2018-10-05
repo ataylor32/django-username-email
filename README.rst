@@ -25,8 +25,9 @@ backend.
 Install & Set up
 ----------------
 
-0. If you previously used Django's default user model,
-   ``django.contrib.auth.models.User``, jump to **Notes** first (then come
+0. If your Django project previously used Django's default user model,
+   ``django.contrib.auth.models.User``, or if you are unfamiliar with using
+   custom user models, jump to **Notes** first (then come
    back). Otherwise, continue onward!
 
 1. Install with ``pip``:
@@ -58,10 +59,7 @@ Install & Set up
 
        AUTH_USER_MODEL = 'cuser.CUser'
 
-4. Instead of referring to User directly, you should reference the user
-   model using ``django.contrib.auth.get_user_model()``
-
-5. If you use Django's default ``AuthenticationForm`` class, it is
+4. If you use Django's default ``AuthenticationForm`` class, it is
    strongly recommended that you replace it with the one included with
    CUser. This will make the ``<input>`` have its ``type`` attribute set
    to ``email`` and browsers' autocomplete feature will suggest email
@@ -96,13 +94,13 @@ Install & Set up
            ...
        ]
 
-6. Run migrations.
+5. Run migrations.
 
    .. code-block:: shell
 
        python manage.py migrate
 
-7. There is a good chance that you want foo@example.com and FOO@example.com to
+6. There is a good chance that you want foo@example.com and FOO@example.com to
    be treated as the same email address. There is a variety of ways to go about
    doing this. How you handle it will depend on the needs of your project and
    personal preference, so CUser does not provide a solution for this out of
@@ -144,6 +142,9 @@ Notes
 If you have tables referencing Django's ``User`` model, you will have to
 delete those table and migrations, then re-migrate. This will ensure
 everything is set up correctly from the beginning.
+
+Instead of referring to User directly, you should reference the user model
+using ``django.contrib.auth.get_user_model()``
 
 When you define a foreign key or many-to-many relations to the ``User``
 model, you should specify the custom model using the ``AUTH_USER_MODEL``
