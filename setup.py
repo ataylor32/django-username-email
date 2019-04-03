@@ -40,6 +40,7 @@ setup(
         'Framework :: Django',
         'Framework :: Django :: 2.0',
         'Framework :: Django :: 2.1',
+        'Framework :: Django :: 2.2',
         'Operating System :: OS Independent',
     ],
     keywords='user email username',
