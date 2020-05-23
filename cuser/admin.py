@@ -31,6 +31,7 @@ class UserAdmin(BaseUserAdmin):
     search_fields = ('email', 'first_name', 'last_name')
     ordering = ('email',)
 
+
 if CUSER_SETTINGS['register_proxy_auth_group_model']:
     admin.site.unregister(StockGroup)
 
