@@ -10,7 +10,7 @@ takes a tiny amount of effort to use.
 The only difference between CUser and the vanilla Django ``User`` is email
 address is the ``USERNAME_FIELD`` (and username does not exist).
 
-CUser supports Django 2.2 and 3.0. If you need to use CUser with
+CUser supports Django 2.2 - Django 3.1. If you need to use CUser with
 Django 1.8 - Django 2.1, you must install an older, unmaintained version of
 CUser, as noted in the "Install & Set up" section.
 
@@ -53,8 +53,11 @@ that, you may follow the remaining steps below just the way they are.
 
    .. code-block:: shell
 
-       # Django 2.2 or 3.0
+       # Django 3.1
        pip install django-username-email
+
+       # Django 2.2 or 3.0
+       pip install "django-username-email<2.4"
 
        # Django 2.0 or 2.1 (unmaintained)
        pip install django-username-email==2.2.4
