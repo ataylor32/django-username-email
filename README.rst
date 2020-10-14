@@ -129,7 +129,9 @@ that, you may follow the remaining steps below just the way they are.
    be treated as the same email address. There is a variety of ways to go about
    doing this. How you handle it will depend on the needs of your project and
    personal preference, so CUser does not provide a solution for this out of
-   the box. You will need to address this yourself if this applies to you.
+   the box. You will need to address this yourself if this applies to you. If
+   you're using CUser's ``AuthenticationForm`` class (see step 4), you may want
+   to subclass it and override ``error_messages['invalid_login']``.
 
 Configuration
 -------------
