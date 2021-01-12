@@ -3,7 +3,7 @@ from django import forms
 from django.contrib.auth import (authenticate, get_user_model,
                                  password_validation)
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from cuser.models import CUser
 
