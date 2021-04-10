@@ -34,22 +34,22 @@ arises). If you would *not* like to follow this recommendation and just want to
 use CUser's ``CUser`` model, simply follow the steps below (you can skip the
 rest of this paragraph). If you *would* like to follow this recommendation, you
 should still follow the steps below, but with the following adjustments: After
-step 2, follow
+step 3, follow
 `these instructions <https://docs.djangoproject.com/en/2.2/topics/auth/customizing/#using-a-custom-user-model-when-starting-a-project>`_,
 but instead of using ``from django.contrib.auth.models import AbstractUser``
 use ``from cuser.models import AbstractCUser`` and instead of using
 ``from django.contrib.auth.admin import UserAdmin`` use
-``from cuser.admin import UserAdmin``. Then for step 3 of the steps below, you
+``from cuser.admin import UserAdmin``. Then for step 4 of the steps below, you
 should set ``AUTH_USER_MODEL`` to your custom user model instead of CUser's
 ``CUser`` model. You should then run ``python manage.py makemigrations``. After
 that, you may follow the remaining steps below just the way they are.
 
-0. If your Django project previously used Django's default user model,
+1. If your Django project previously used Django's default user model,
    ``django.contrib.auth.models.User``, or if you are unfamiliar with using
    custom user models, jump to **Notes** first (then come
    back). Otherwise, continue onward!
 
-1. Install with ``pip``:
+2. Install with ``pip``:
 
    .. code-block:: shell
 
@@ -68,7 +68,7 @@ that, you may follow the remaining steps below just the way they are.
        # Django 1.8 - Django 1.10 (unmaintained)
        pip install django-username-email==2.1.2
 
-2. Add ``cuser`` to your ``INSTALLED_APPS`` setting:
+3. Add ``cuser`` to your ``INSTALLED_APPS`` setting:
 
    .. code-block:: python
 
@@ -77,14 +77,14 @@ that, you may follow the remaining steps below just the way they are.
            'cuser',
        ]
 
-3. Specify the custom model as the default user model for your project
+4. Specify the custom model as the default user model for your project
    using the ``AUTH_USER_MODEL`` setting in your settings.py:
 
    .. code-block:: python
 
        AUTH_USER_MODEL = 'cuser.CUser'
 
-4. If you use Django's default ``AuthenticationForm`` class, it is
+5. If you use Django's default ``AuthenticationForm`` class, it is
    strongly recommended that you replace it with the one included with
    CUser. This will make the ``<input>`` have its ``type`` attribute set
    to ``email`` and browsers' autocomplete feature will suggest email
@@ -119,18 +119,18 @@ that, you may follow the remaining steps below just the way they are.
            ...
        ]
 
-5. Run migrations.
+6. Run migrations.
 
    .. code-block:: shell
 
        python manage.py migrate
 
-6. There is a good chance that you want foo@example.com and FOO@example.com to
+7. There is a good chance that you want foo@example.com and FOO@example.com to
    be treated as the same email address. There is a variety of ways to go about
    doing this. How you handle it will depend on the needs of your project and
    personal preference, so CUser does not provide a solution for this out of
    the box. You will need to address this yourself if this applies to you. If
-   you're using CUser's ``AuthenticationForm`` class (see step 4), you may want
+   you're using CUser's ``AuthenticationForm`` class (see step 5), you may want
    to subclass it and override ``error_messages['invalid_login']``.
 
 Configuration
