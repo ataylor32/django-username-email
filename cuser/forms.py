@@ -1,3 +1,4 @@
+import django
 from django import forms
 from django.contrib.auth import (authenticate, get_user_model,
                                  password_validation)
@@ -173,8 +174,9 @@ class UserChangeForm(forms.ModelForm):
         if user_permissions:
             user_permissions.queryset = user_permissions.queryset.select_related('content_type')
 
-    def clean_password(self):
-        # Regardless of what the user provides, return the initial value.
-        # This is done here, rather than on the field, because the
-        # field does not have access to the initial value
-        return self.initial.get('password')
+    if django.VERSION < (3, 2):
+        def clean_password(self):
+            # Regardless of what the user provides, return the initial value.
+            # This is done here, rather than on the field, because the
+            # field does not have access to the initial value
+            return self.initial.get('password')
