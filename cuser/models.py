@@ -51,7 +51,7 @@ class CUserManager(BaseUserManager):
 
     def with_perm(self, perm, is_active=True, include_superusers=True, backend=None, obj=None):
         if backend is None:
-            backends = auth._get_backends(return_tuples=True)
+            backends = auth._get_backends(return_tuples=True)  # pylint: disable=protected-access
             if len(backends) == 1:
                 backend, _ = backends[0]
             else:
