@@ -34,7 +34,7 @@ class AuthenticationForm(forms.Form):
         'inactive': _("This account is inactive."),
     }
 
-    def __init__(self, request=None, *args, **kwargs):
+    def __init__(self, request=None, *args, **kwargs):  # pylint: disable=keyword-arg-before-vararg
         """
         The 'request' parameter is set for custom auth use by subclasses.
         The form data comes in via the standard 'data' kwarg.
