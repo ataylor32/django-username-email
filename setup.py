@@ -39,8 +39,6 @@ setup(
 
         'Environment :: Web Environment',
         'Framework :: Django',
-        'Framework :: Django :: 2.2',
-        'Framework :: Django :: 3.1',
         'Framework :: Django :: 3.2',
         'Framework :: Django :: 4.0',
         'Operating System :: OS Independent',
@@ -51,6 +49,6 @@ setup(
     include_package_data=True,
 
     install_requires=[
-        'django>=2.2,<3.3,!=3.0.*',
+        'django>=3.2',
     ]
 )
