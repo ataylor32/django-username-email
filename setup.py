@@ -16,8 +16,8 @@ setup(
 
     url='https://github.com/tmm/django-username-email/',
 
-    author='Tom Meagher',
-    author_email='tom@meagher.co',
+    author='Adam Taylor',
+    author_email='ataylor32@gmail.com',
 
     license='MIT',
 

@@ -198,9 +198,12 @@ License
 
 Released under the MIT license. See LICENSE for details.
 
+Original author
+---------------
+
+Tom Meagher
+
 Questions, comments, or anything else?
 --------------------------------------
 
 -  Open an issue
--  `Twitter <https://twitter.com/tomfme>`__
--  tom@meagher.co
