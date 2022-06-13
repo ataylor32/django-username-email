@@ -1,0 +1,40 @@
+---
+name: Test
+
+'on': [push]
+
+jobs:
+  tox:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - python-version: "3.6"
+            tox-env: py36-django32
+          - python-version: "3.7"
+            tox-env: py37-django32
+          - python-version: "3.8"
+            tox-env: py38-django32
+          - python-version: "3.9"
+            tox-env: py39-django32
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Set up Pip cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ matrix.tox-env }}-${{ hashFiles('setup.py', 'tox.ini') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-${{ matrix.tox-env }}-
+
+      - name: Install tox
+        run: pip install tox==3.*
+
+      - name: Run Tox env '${{ matrix.tox-env }}'
+        run: tox -e ${{ matrix.tox-env }}
