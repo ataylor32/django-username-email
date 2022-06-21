@@ -1,5 +1,5 @@
 from os import path
-from setuptools import setup, find_packages
+from setuptools import setup, find_namespace_packages
 
 here = path.abspath(path.dirname(__file__))
 
@@ -45,7 +45,7 @@ setup(
     ],
     keywords='user email username',
 
-    packages=find_packages(),
+    packages=find_namespace_packages(),
     include_package_data=True,
 
     install_requires=[
