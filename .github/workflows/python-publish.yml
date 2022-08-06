@@ -5,7 +5,6 @@ name: Deploy
   create:
     tags:
       - '**'
-  workflow_dispatch:
 
 permissions:
   contents: read
@@ -36,7 +35,7 @@ jobs:
         run: python -m build
 
       - name: Publish package
-        uses: pypa/gh-action-pypi-publish@v1
+        uses: pypa/gh-action-pypi-publish@release/v1
         with:
           user: __token__
           password: ${{ secrets.PYPI_API_TOKEN }}
