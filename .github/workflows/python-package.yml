@@ -25,6 +25,12 @@ jobs:
             tox-env: py39-django40
           - python-version: "3.10"
             tox-env: py310-django40
+          - python-version: "3.8"
+            tox-env: py38-django41
+          - python-version: "3.9"
+            tox-env: py39-django41
+          - python-version: "3.10"
+            tox-env: py310-django41
     steps:
       - uses: actions/checkout@v3
 
