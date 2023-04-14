@@ -142,6 +142,8 @@ class UserCreationForm(forms.ModelForm):
         user.set_password(self.cleaned_data["password1"])
         if commit:
             user.save()
+            if django.VERSION >= (4, 2) and hasattr(self, "save_m2m"):
+                self.save_m2m()
         return user
 
 
@@ -169,7 +171,12 @@ class UserChangeForm(forms.ModelForm):
 
         password = self.fields.get('password')
         if password:
-            password.help_text = password.help_text.format('../password/')
+            if django.VERSION >= (4, 2):
+                password.help_text = password.help_text.format(
+                    f"../../{self.instance.pk}/password/"
+                )
+            else:
+                password.help_text = password.help_text.format('../password/')
         user_permissions = self.fields.get('user_permissions')
         if user_permissions:
             user_permissions.queryset = user_permissions.queryset.select_related('content_type')
