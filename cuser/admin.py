@@ -1,3 +1,4 @@
+import django
 from django.contrib import admin
 from django.contrib.auth.admin import GroupAdmin as BaseGroupAdmin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
@@ -19,17 +20,27 @@ class UserAdmin(BaseUserAdmin):
                                        'groups', 'user_permissions')}),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
     )
-    add_fieldsets = (
-        (None, {
-            'classes': ('wide',),
-            'fields': ('email', 'password1', 'password2'),
-        }),
-    )
     form = UserChangeForm
     add_form = UserCreationForm
     list_display = ('email', 'first_name', 'last_name', 'is_staff')
     search_fields = ('email', 'first_name', 'last_name')
     ordering = ('email',)
+
+    def get_fieldsets(self, request, obj=None):
+        if not obj:
+            add_fieldsets = (
+                (None, {
+                    'classes': ('wide',),
+                    'fields': ['email', 'password1', 'password2'],
+                }),
+            )
+
+            if django.VERSION >= (5, 1):
+                add_fieldsets[0][1]['fields'].insert(1, 'usable_password')
+
+            return add_fieldsets
+
+        return super().get_fieldsets(request, obj)
 
 
 if CUSER_SETTINGS['register_proxy_auth_group_model']:
