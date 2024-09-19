@@ -9,7 +9,7 @@ with open(path.join(here, 'README.rst')) as f:
 setup(
     name='django-username-email',
 
-    version='2.5.5',
+    version='2.5.6',
 
     description='Custom Django User model that makes email the USERNAME_FIELD.',
     long_description=long_description,
