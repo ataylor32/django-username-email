@@ -5,7 +5,7 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import Group as StockGroup
 from django.utils.translation import gettext_lazy as _
 
-from cuser.forms import UserChangeForm, UserCreationForm
+from cuser.forms import AdminUserCreationForm, UserChangeForm
 from cuser.models import CUser, Group
 from cuser.settings import CUSER_SETTINGS
 
@@ -21,7 +21,7 @@ class UserAdmin(BaseUserAdmin):
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
     )
     form = UserChangeForm
-    add_form = UserCreationForm
+    add_form = AdminUserCreationForm
     list_display = ('email', 'first_name', 'last_name', 'is_staff')
     search_fields = ('email', 'first_name', 'last_name')
     ordering = ('email',)

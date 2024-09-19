@@ -8,7 +8,8 @@ from django.utils.translation import gettext_lazy as _
 from cuser.models import CUser
 
 try:
-    from django.contrib.auth.forms import SetPasswordMixin
+    from django.contrib.auth.forms import (SetPasswordMixin,
+                                           SetUnusablePasswordMixin)
 except ImportError:
     pass
 
@@ -104,7 +105,6 @@ if django.VERSION >= (5, 1):
             widget=forms.EmailInput(attrs={'autofocus': True}),
         )
         password1, password2 = SetPasswordMixin.create_password_fields()
-        usable_password = SetPasswordMixin.create_usable_password_field()
 
         class Meta:
             model = CUser
@@ -126,6 +126,9 @@ if django.VERSION >= (5, 1):
             if commit and hasattr(self, "save_m2m"):
                 self.save_m2m()
             return user
+
+    class AdminUserCreationForm(SetUnusablePasswordMixin, UserCreationForm):
+        usable_password = SetUnusablePasswordMixin.create_usable_password_field()
 else:
     class UserCreationForm(forms.ModelForm):
         """
@@ -186,6 +189,9 @@ else:
                 if django.VERSION >= (4, 2) and hasattr(self, "save_m2m"):
                     self.save_m2m()
             return user
+
+    class AdminUserCreationForm(UserCreationForm):
+        pass
 
 
 class UserChangeForm(forms.ModelForm):
