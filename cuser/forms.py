@@ -4,6 +4,7 @@ from django.contrib.auth import (authenticate, get_user_model,
                                  password_validation)
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.utils.translation import gettext_lazy as _
+from django.views.decorators.debug import sensitive_variables
 
 from cuser.models import CUser
 
@@ -51,6 +52,7 @@ class AuthenticationForm(forms.Form):
 
         self.username_field = UserModel._meta.get_field(UserModel.USERNAME_FIELD)
 
+    @sensitive_variables()
     def clean(self):
         email = self.cleaned_data.get('email')
         password = self.cleaned_data.get('password')
@@ -129,6 +131,13 @@ if django.VERSION >= (5, 1):
 
     class AdminUserCreationForm(SetUnusablePasswordMixin, UserCreationForm):
         usable_password = SetUnusablePasswordMixin.create_usable_password_field()
+
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+
+            if django.VERSION >= (5, 2):
+                self.fields["password1"].required = False
+                self.fields["password2"].required = False
 else:
     class UserCreationForm(forms.ModelForm):
         """

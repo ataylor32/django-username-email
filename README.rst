@@ -10,7 +10,7 @@ takes a tiny amount of effort to use.
 The only difference between CUser and the vanilla Django ``User`` is email
 address is the ``USERNAME_FIELD`` (and username does not exist).
 
-CUser supports Django 3.2 - 5.1. If you need to use CUser with
+CUser supports Django 3.2 - 5.2. If you need to use CUser with
 Django 1.8 - 3.1, you must install an older, unmaintained version of
 CUser, as noted in the "Install & Set up" section.
 
@@ -35,7 +35,7 @@ use CUser's ``CUser`` model, simply follow the steps below (you can skip the
 rest of this paragraph). If you *would* like to follow this recommendation, you
 should still follow the steps below, but with the following adjustments: After
 step 3, follow
-`these instructions <https://docs.djangoproject.com/en/3.2/topics/auth/customizing/#using-a-custom-user-model-when-starting-a-project>`_,
+`these instructions <https://docs.djangoproject.com/en/5.2/topics/auth/customizing/#using-a-custom-user-model-when-starting-a-project>`_,
 but instead of using ``from django.contrib.auth.models import AbstractUser``
 use ``from cuser.models import AbstractCUser`` and instead of using
 ``from django.contrib.auth.admin import UserAdmin`` use
@@ -53,7 +53,7 @@ that, you may follow the remaining steps below just the way they are.
 
    .. code-block:: shell
 
-       # Django 3.2 - 5.1
+       # Django 3.2 - 5.2
        pip install django-username-email
 
        # Django 3.1 (unmaintained)
