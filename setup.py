@@ -14,7 +14,7 @@ setup(
     description='Custom Django User model that makes email the USERNAME_FIELD.',
     long_description=long_description,
 
-    url='https://github.com/tmm/django-username-email/',
+    url='https://github.com/ataylor32/django-username-email/',
 
     author='Adam Taylor',
     author_email='ataylor32@gmail.com',
