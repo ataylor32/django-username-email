@@ -63,11 +63,13 @@ jobs:
             tox-env: py312-django52
           - python-version: "3.13"
             tox-env: py313-django52
+          - python-version: "3.14"
+            tox-env: py314-django52
     steps:
       - uses: actions/checkout@v3
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
 
