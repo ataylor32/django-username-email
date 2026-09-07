@@ -99,12 +99,12 @@ that, you may follow the remaining steps below just the way they are.
    .. code-block:: python
 
        from cuser.forms import AuthenticationForm
-       from django.conf.urls import include, url
        from django.contrib.auth.views import LoginView
+       from django.urls import include, path
 
        urlpatterns = [
-           url(r'^accounts/login/$', LoginView.as_view(authentication_form=AuthenticationForm), name='login'),
-           url(r'^accounts/', include('django.contrib.auth.urls')),
+           path('accounts/login/', LoginView.as_view(authentication_form=AuthenticationForm), name='login'),
+           path('accounts/', include('django.contrib.auth.urls')),
            ...
        ]
 
