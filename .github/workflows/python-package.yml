@@ -71,6 +71,12 @@ jobs:
             tox-env: py313-django60
           - python-version: "3.14"
             tox-env: py314-django60
+          - python-version: "3.12"
+            tox-env: py312-django61
+          - python-version: "3.13"
+            tox-env: py313-django61
+          - python-version: "3.14"
+            tox-env: py314-django61
     steps:
       - uses: actions/checkout@v3
 
