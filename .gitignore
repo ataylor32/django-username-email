@@ -7,4 +7,5 @@ dist/
 __pycache__/
 *.so
 *~
+.mypy_cache/
 .tox/

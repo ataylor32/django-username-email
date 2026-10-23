@@ -53,6 +53,7 @@ setup(
         'Framework :: Django :: 6.0',
         'Framework :: Django :: 6.1',
         'Operating System :: OS Independent',
+        'Typing :: Typed',
     ],
     keywords='user email username',
 

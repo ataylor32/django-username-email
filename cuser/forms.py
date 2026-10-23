@@ -1,18 +1,19 @@
+from typing import TYPE_CHECKING, Any, Dict, Optional, cast
+
 import django
 from django import forms
 from django.contrib.auth import (authenticate, get_user_model,
                                  password_validation)
+from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
+from django.http import HttpRequest
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.debug import sensitive_variables
 
 from cuser.models import CUser
 
-try:
-    from django.contrib.auth.forms import (SetPasswordMixin,
-                                           SetUnusablePasswordMixin)
-except ImportError:
-    pass
+if TYPE_CHECKING:
+    from django.db import models
 
 UserModel = get_user_model()
 
@@ -41,19 +42,22 @@ class AuthenticationForm(forms.Form):
         'inactive': _("This account is inactive."),
     }
 
-    def __init__(self, request=None, *args, **kwargs):  # pylint: disable=keyword-arg-before-vararg
+    def __init__(self, request: Optional[HttpRequest] = None, *args: Any, **kwargs: Any) -> None:  # pylint: disable=keyword-arg-before-vararg
         """
         The 'request' parameter is set for custom auth use by subclasses.
         The form data comes in via the standard 'data' kwarg.
         """
         self.request = request
-        self.user_cache = None
+        self.user_cache: Optional[AbstractBaseUser] = None
         super().__init__(*args, **kwargs)
 
-        self.username_field = UserModel._meta.get_field(UserModel.USERNAME_FIELD)
+        self.username_field = cast(
+            'models.Field[Any, Any]',
+            UserModel._meta.get_field(getattr(UserModel, 'USERNAME_FIELD')),
+        )
 
     @sensitive_variables()
-    def clean(self):
+    def clean(self) -> Dict[str, Any]:
         email = self.cleaned_data.get('email')
         password = self.cleaned_data.get('password')
 
@@ -66,7 +70,7 @@ class AuthenticationForm(forms.Form):
 
         return self.cleaned_data
 
-    def confirm_login_allowed(self, user):
+    def confirm_login_allowed(self, user: AbstractBaseUser) -> None:
         """
         Controls whether the given User may log in. This is a policy setting,
         independent of end-user authentication. This default behavior is to
@@ -83,10 +87,10 @@ class AuthenticationForm(forms.Form):
                 code='inactive',
             )
 
-    def get_user(self):
+    def get_user(self) -> Optional[AbstractBaseUser]:
         return self.user_cache
 
-    def get_invalid_login_error(self):
+    def get_invalid_login_error(self) -> forms.ValidationError:
         return forms.ValidationError(
             self.error_messages['invalid_login'],
             code='invalid_login',
@@ -94,7 +98,11 @@ class AuthenticationForm(forms.Form):
         )
 
 
-if django.VERSION >= (5, 1):
+if TYPE_CHECKING or django.VERSION >= (5, 1):
+    from django.contrib.auth.forms import (  # pylint: disable=no-name-in-module
+        SetPasswordMixin, SetUnusablePasswordMixin
+    )
+
     class UserCreationForm(SetPasswordMixin, forms.ModelForm):
         """
         A form that creates a user, with no privileges, from the given email and
@@ -112,27 +120,29 @@ if django.VERSION >= (5, 1):
             model = CUser
             fields = ("email",)
 
-        def clean(self):
+        def clean(self) -> Optional[Dict[str, Any]]:
             self.validate_passwords()
             return super().clean()
 
-        def _post_clean(self):
-            super()._post_clean()
+        def _post_clean(self) -> None:
+            super()._post_clean()  # type: ignore[misc]
             # Validate the password after self.instance is updated with form data
             # by super().
             self.validate_password_for_user(self.instance)
 
-        def save(self, commit=True):
-            user = super().save(commit=False)
+        def save(self, commit: bool = True) -> CUser:
+            user: CUser = super().save(commit=False)
             user = self.set_password_and_save(user, commit=commit)
             if commit and hasattr(self, "save_m2m"):
                 self.save_m2m()
             return user
 
-    class AdminUserCreationForm(SetUnusablePasswordMixin, UserCreationForm):
+    class AdminUserCreationForm(  # type: ignore[misc]
+        SetUnusablePasswordMixin, UserCreationForm
+    ):
         usable_password = SetUnusablePasswordMixin.create_usable_password_field()
 
-        def __init__(self, *args, **kwargs):
+        def __init__(self, *args: Any, **kwargs: Any) -> None:
             super().__init__(*args, **kwargs)
 
             if django.VERSION >= (5, 2):
@@ -169,7 +179,7 @@ else:
             model = CUser
             fields = ("email",)
 
-        def clean_password2(self):
+        def clean_password2(self) -> Optional[str]:
             password1 = self.cleaned_data.get("password1")
             password2 = self.cleaned_data.get("password2")
             if password1 and password2 and password1 != password2:
@@ -179,8 +189,8 @@ else:
                 )
             return password2
 
-        def _post_clean(self):
-            super()._post_clean()
+        def _post_clean(self) -> None:
+            super()._post_clean()  # type: ignore[misc]
             # Validate the password after self.instance is updated with form data
             # by super().
             password = self.cleaned_data.get('password2')
@@ -190,8 +200,8 @@ else:
                 except forms.ValidationError as error:
                     self.add_error('password2', error)
 
-        def save(self, commit=True):
-            user = super().save(commit=False)
+        def save(self, commit: bool = True) -> CUser:
+            user: CUser = super().save(commit=False)
             user.set_password(self.cleaned_data["password1"])
             if commit:
                 user.save()
@@ -222,7 +232,7 @@ class UserChangeForm(forms.ModelForm):
         model = CUser
         fields = '__all__'
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
 
         password = self.fields.get('password')
@@ -233,6 +243,9 @@ class UserChangeForm(forms.ModelForm):
                 )
             else:
                 password.help_text = password.help_text.format('../password/')
-        user_permissions = self.fields.get('user_permissions')
-        if user_permissions:
+        user_permissions = cast(
+            'Optional[forms.ModelMultipleChoiceField[Any]]',
+            self.fields.get('user_permissions'),
+        )
+        if user_permissions and user_permissions.queryset is not None:
             user_permissions.queryset = user_permissions.queryset.select_related('content_type')

@@ -1,13 +1,19 @@
+from typing import TYPE_CHECKING, Optional
+
 import django
 from django.contrib import admin
 from django.contrib.auth.admin import GroupAdmin as BaseGroupAdmin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import Group as StockGroup
+from django.http import HttpRequest
 from django.utils.translation import gettext_lazy as _
 
 from cuser.forms import AdminUserCreationForm, UserChangeForm
 from cuser.models import CUser, Group
 from cuser.settings import CUSER_SETTINGS
+
+if TYPE_CHECKING:
+    from django.contrib.admin.options import _FieldsetSpec
 
 
 @admin.register(CUser)
@@ -26,19 +32,18 @@ class UserAdmin(BaseUserAdmin):
     search_fields = ('email', 'first_name', 'last_name')
     ordering = ('email',)
 
-    def get_fieldsets(self, request, obj=None):
+    def get_fieldsets(
+        self, request: HttpRequest, obj: Optional[CUser] = None
+    ) -> '_FieldsetSpec':
         if not obj:
-            add_fieldsets = (
+            usable_password_fields = ['usable_password'] if django.VERSION >= (5, 1) else []
+
+            return (
                 (None, {
                     'classes': ('wide',),
-                    'fields': ['email', 'password1', 'password2'],
+                    'fields': ['email', *usable_password_fields, 'password1', 'password2'],
                 }),
             )
-
-            if django.VERSION >= (5, 1):
-                add_fieldsets[0][1]['fields'].insert(1, 'usable_password')
-
-            return add_fieldsets
 
         return super().get_fieldsets(request, obj)
 

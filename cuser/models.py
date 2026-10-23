@@ -1,3 +1,5 @@
+from typing import TYPE_CHECKING, Any, ClassVar, Optional, TypeVar, Union
+
 from django.db import models
 from django.contrib import auth
 from django.contrib.auth.hashers import make_password
@@ -9,11 +11,22 @@ from django.core.mail import send_mail
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
+if TYPE_CHECKING:
+    import datetime
 
-class CUserManager(BaseUserManager):
+    from django.contrib.auth.models import Permission
+    from django.db.models import QuerySet
+    from django.db.models.expressions import Combinable
+    from django_stubs_ext import StrOrPromise
+    from typing_extensions import Self
+
+_UserT = TypeVar('_UserT', bound='AbstractCUser')
+
+
+class CUserManager(BaseUserManager[_UserT]):
     use_in_migrations = True
 
-    def _create_user(self, email, password, **extra_fields):
+    def _create_user(self, email: str, password: Optional[str], **extra_fields: Any) -> _UserT:
         """
         Create and save a user with the given email and password.
         """
@@ -25,12 +38,16 @@ class CUserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_user(self, email, password=None, **extra_fields):
+    def create_user(
+        self, email: str, password: Optional[str] = None, **extra_fields: Any
+    ) -> _UserT:
         extra_fields.setdefault('is_staff', False)
         extra_fields.setdefault('is_superuser', False)
         return self._create_user(email, password, **extra_fields)
 
-    def create_superuser(self, email, password=None, **extra_fields):
+    def create_superuser(
+        self, email: str, password: Optional[str] = None, **extra_fields: Any
+    ) -> _UserT:
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
 
@@ -41,11 +58,19 @@ class CUserManager(BaseUserManager):
 
         return self._create_user(email, password, **extra_fields)
 
-    def with_perm(self, perm, is_active=True, include_superusers=True, backend=None, obj=None):
+    def with_perm(
+        self,
+        perm: Union[str, 'Permission'],
+        is_active: bool = True,
+        include_superusers: bool = True,
+        backend: Optional[str] = None,
+        obj: Optional[models.Model] = None,
+    ) -> 'QuerySet[_UserT]':
+        backend_obj: Any
         if backend is None:
-            backends = auth._get_backends(return_tuples=True)  # pylint: disable=protected-access
+            backends = auth._get_backends(return_tuples=True)  # type: ignore[attr-defined]  # pylint: disable=protected-access
             if len(backends) == 1:
-                backend, _ = backends[0]
+                backend_obj, _ = backends[0]
             else:
                 raise ValueError(
                     'You have multiple authentication backends configured and '
@@ -57,14 +82,15 @@ class CUserManager(BaseUserManager):
                 % backend
             )
         else:
-            backend = auth.load_backend(backend)
-        if hasattr(backend, 'with_perm'):
-            return backend.with_perm(
+            backend_obj = auth.load_backend(backend)
+        if hasattr(backend_obj, 'with_perm'):
+            queryset: 'QuerySet[_UserT]' = backend_obj.with_perm(
                 perm,
                 is_active=is_active,
                 include_superusers=include_superusers,
                 obj=obj,
             )
+            return queryset
         return self.none()
 
 
@@ -75,16 +101,20 @@ class AbstractCUser(AbstractBaseUser, PermissionsMixin):
 
     Email and password are required. Other fields are optional.
     """
-    email = models.EmailField(
+    email: 'models.EmailField[Union[str, Combinable], str]' = models.EmailField(
         _('email address'),
         unique=True,
         error_messages={
             'unique': _("A user with that email address already exists."),
         },
     )
-    first_name = models.CharField(_('first name'), max_length=150, blank=True)
-    last_name = models.CharField(_('last name'), max_length=150, blank=True)
-    is_staff = models.BooleanField(
+    first_name: 'models.CharField[Union[str, int, Combinable], str]' = models.CharField(
+        _('first name'), max_length=150, blank=True
+    )
+    last_name: 'models.CharField[Union[str, int, Combinable], str]' = models.CharField(
+        _('last name'), max_length=150, blank=True
+    )
+    is_staff: 'models.BooleanField[Union[bool, Combinable], bool]' = models.BooleanField(
         _('staff status'),
         default=False,
         help_text=_('Designates whether the user can log into this admin site.'),
@@ -97,34 +127,42 @@ class AbstractCUser(AbstractBaseUser, PermissionsMixin):
             'Unselect this instead of deleting accounts.'
         ),
     )
-    date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
+    date_joined: (
+        'models.DateTimeField[Union[str, datetime.datetime, datetime.date, Combinable], datetime.datetime]'
+    ) = models.DateTimeField(_('date joined'), default=timezone.now)
 
-    objects = CUserManager()
+    objects: ClassVar['CUserManager[Self]'] = CUserManager()  # pyright: ignore [reportIncompatibleVariableOverride]
 
     EMAIL_FIELD = 'email'
     USERNAME_FIELD = 'email'
 
-    class Meta:
+    class Meta:  # pyright: ignore [reportIncompatibleVariableOverride]
         verbose_name = _('user')
         verbose_name_plural = _('users')
         abstract = True
 
-    def clean(self):
+    def clean(self) -> None:
         super().clean()
         self.email = self.__class__.objects.normalize_email(self.email)
 
-    def get_full_name(self):
+    def get_full_name(self) -> str:
         """
         Return the first_name plus the last_name, with a space in between.
         """
         full_name = '%s %s' % (self.first_name, self.last_name)
         return full_name.strip()
 
-    def get_short_name(self):
+    def get_short_name(self) -> str:
         """Return the short name for the user."""
         return self.first_name
 
-    def email_user(self, subject, message, from_email=None, **kwargs):
+    def email_user(
+        self,
+        subject: 'StrOrPromise',
+        message: 'StrOrPromise',
+        from_email: Optional[str] = None,
+        **kwargs: Any
+    ) -> None:
         """Send an email to this user."""
         send_mail(subject, message, from_email, [self.email], **kwargs)
 
