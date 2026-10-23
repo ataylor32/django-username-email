@@ -1,6 +1,6 @@
-import django
 from django.db import models
 from django.contrib import auth
+from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import (
     BaseUserManager, PermissionsMixin, AbstractBaseUser
 )
@@ -8,9 +8,6 @@ from django.contrib.auth.models import Group as BaseGroup
 from django.core.mail import send_mail
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-
-if django.VERSION >= (3, 2):
-    from django.contrib.auth.hashers import make_password
 
 
 class CUserManager(BaseUserManager):
@@ -24,12 +21,7 @@ class CUserManager(BaseUserManager):
             raise ValueError('The given email must be set')
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
-
-        if django.VERSION >= (3, 2):
-            user.password = make_password(password)
-        else:
-            user.set_password(password)
-
+        user.password = make_password(password)
         user.save(using=self._db)
         return user
 
